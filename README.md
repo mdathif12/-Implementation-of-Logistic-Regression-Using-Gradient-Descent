@@ -1,149 +1,118 @@
 # Implementation-of-Logistic-Regression-Using-Gradient-Descent
 
 ## AIM:
-
 To write a program to implement the the Logistic Regression Using Gradient Descent.
 
 ## Equipments Required:
-
 1. Hardware – PCs
 2. Anaconda – Python 3.7 Installation / Jupyter notebook
 
 ## Algorithm
-
-1. Data Preprocessing: Read dataset, drop unnecessary columns, and encode categorical variables.
-2. Initialize Parameters: Initialize theta randomly and extract features (x) and target variable (y).
-3. Define Sigmoid Function: Implement the sigmoid function to transform linear outputs into probabilities.
-4. Define Loss Function and Gradient Descent: Define loss function using sigmoid output and implement gradient descent to minimize loss.
-5. Prediction and Evaluation: Use trained parameters to predict on dataset, calculate accuracy, and optionally predict placement status of new data points.
-
+### Step 1: Start
+### Step 2: Load the Dataset
+### Step 3 Preprocess the Data
+### Step 4: Split the Data
+### Step 5: Build and Train the Model
+### Step 6: Evaluate the Model
+### Step 7: Predict New Data
+### Step 8: Stop
 
 ## Program:
-
-```python
-Program to implement the the Logistic Regression Using Gradient Descent.
-Developed by: Mohamed Athif Rahuman J
-RegisterNumber:  212223220058
 ```
-```py
+Program to implement the the Logistic Regression Using Gradient Descent.
+Developed by:Mohamed Athif Rahuman J
+RegisterNumber:  212223220058
+
+```
+```
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
-data=pd.read_csv('/content/Placement_Data.csv')
-```
-```py
-data=data.drop('sl_no',axis=1)
-data=data.drop('salary',axis=1)
-```
-```py
-data["gender"]=data["gender"].astype('category')
-data["ssc_b"]=data["ssc_b"].astype('category')
-data["hsc_b"]=data["hsc_b"].astype('category')
-data["degree_t"]=data["degree_t"].astype('category')
-data["workex"]=data["workex"].astype('category')
-data["specialisation"]=data["specialisation"].astype('category')
-data["status"]=data["status"].astype('category')
-data["hsc_s"]=data["hsc_s"].astype('category')
-data.dtypes
-```
-```py
-data["gender"]=data["gender"].cat.codes
-data["ssc_b"]=data["ssc_b"].cat.codes
-data["hsc_b"]=data["hsc_b"].cat.codes
-data["degree_t"]=data["degree_t"].cat.codes
-data["workex"]=data["workex"].cat.codes
-data["specialisation"]=data["specialisation"].cat.codes
-data["status"]=data["status"].cat.codes
-data["hsc_s"]=data["hsc_s"].cat.codes
-data
-```
-```py
-x=data.iloc[:,:-1].values
-y=data.iloc[:,-1].values
-y
-```
-```py
-theta = np.random.randn(x.shape[1])
-Y=y
-```
-```py
+dataset = pd.read_csv("D:/introduction to ML/jupyter notebooks/Placement_Data.csv")
+dataset
+
+#dropping the serial no and salary col
+
+dataset = dataset.drop('sl_no',axis=1)
+dataset = dataset.drop('salary',axis=1)
+dataset
+dataset["gender"] = dataset["gender"].astype('category')
+dataset["ssc_b"] = dataset["ssc_b"].astype('category')
+dataset["hsc_b"] = dataset["hsc_b"].astype('category')
+dataset["degree_t"] = dataset["degree_t"].astype('category')
+dataset["workex"] = dataset["workex"].astype('category')
+dataset["specialisation"] = dataset["specialisation"].astype('category')
+dataset["status"] = dataset["status"].astype('category')
+dataset["hsc_s"] = dataset["hsc_s"].astype('category')
+dataset.dtypes
+dataset["gender"] = dataset["gender"].cat.codes
+dataset["ssc_b"] = dataset["ssc_b"].cat.codes
+dataset["hsc_b"] = dataset["hsc_b"].cat.codes
+dataset["degree_t"] = dataset["degree_t"].cat.codes
+dataset["workex"] = dataset["workex"].cat.codes
+dataset["specialisation"] = dataset["specialisation"].cat.codes
+dataset["status"] = dataset["status"].cat.codes
+dataset["hsc_s"] = dataset["hsc_s"].cat.codes
+
+dataset
+
+X = dataset.iloc[:,:-1].values
+Y = dataset.iloc[:,-1].values
+#Initialize the model parameters
+theta = np.random.randn(X.shape[1])
+y = Y
+#Define the sigmoid function:
 def sigmoid(z):
-  return 1/(1+np.exp(-z))
-```
-```py
+    return 1 / (1+np.exp(-z))
+# define the loss function:
 def loss(theta,X,y):
-  h=sigmoid(X.dot(theta))
-  return -np.sum(y*np.log(h)+(1-y)*np.log(1-h))
-```
-```py
+    h = sigmoid(X.dot(theta))
+    return -np.sum(y * np.log(h) + (1 - y) * np.log(1 - h))
+
+#define the gradient descent algorithms
 def gradient_descent(theta,X,y,alpha,num_iterations):
-  m=len(y)
-  for i in range(num_iterations):
-    h=sigmoid(X.dot(theta))
-    gradient = X.T.dot(h-y)/m
-    theta-=alpha * gradient
-  return theta
-```
-```py
-theta=gradient_descent(theta,x,y,alpha=0.01,num_iterations=1000)
-```
-```py
+    m = len(y)
+    for i in range(num_iterations):
+        h = sigmoid(X.dot(theta))
+        gradient = X.T.dot(h - y)/m
+        theta -= alpha*gradient
+    return theta
+
+#train the model:
+theta = gradient_descent(theta,X,y,alpha = 0.01,num_iterations = 1000)
+
+# make predictions:
 def predict(theta,X):
-  h=sigmoid(X.dot(theta))
-  y_pred=np.where(h>=0.5,1,0)
-  return y_pred 
+    h = sigmoid(X.dot(theta))
+    y_pred = np.where(h >= 0.5,1,0)
+    return y_pred
 
-y_pred = predict(theta,x)
-```
-```py
-y_pred=predict(theta,x)
-```
-```py
-accuracy=np.mean(y_pred.flatten()==y)
-print("Accuracy: ",accuracy)
-```
-```py
-print(y_pred)
-```
-```py
-xnew=np.array([[0,87,0,95,0,2,78,2,0,0,1,0]])
-y_prednew=predict(theta,xnew)
+y_pred = predict(theta,X)
+y_pred
+
+Accuracy = np.mean(y_pred.flatten()==y)
+print("Accuracy: ",Accuracy)
+xnew = np.array([[0,87,0,95,0,2,78,2,0,0,1,0]])
+y_prednew = predict(theta,xnew)
+print(y_prednew)
+
+xnew = np.array([[0,0,0,0,0,2,8,2,0,0,1,0]])
+y_prednew = predict(theta,xnew)
 print(y_prednew)
 ```
-```py
-xnew=np.array([[0,0,0,0,0,2,8,2,0,0,1,0]])
-y_prednew=predict(theta,xnew)
-print(y_prednew)
-```
-## Output:
 
-### data columns
+##  Output:
+#### Dataset:
+![image](https://github.com/arbasil05/-Implementation-of-Logistic-Regression-Using-Gradient-Descent/assets/144218037/ee088f29-4c49-4480-ac76-bc4503f5bdcb)
+#### Type of attributes:
+![image](https://github.com/arbasil05/-Implementation-of-Logistic-Regression-Using-Gradient-Descent/assets/144218037/dd92a9d8-d7da-4791-b82f-ffeda66362cc)
+#### Accuracy
+![image](https://github.com/arbasil05/-Implementation-of-Logistic-Regression-Using-Gradient-Descent/assets/144218037/55bd58ff-3dba-4ba6-8273-def9fd384111)
+![image](https://github.com/arbasil05/-Implementation-of-Logistic-Regression-Using-Gradient-Descent/assets/144218037/4580c924-1e59-4a1b-aef9-af0fc9a99678)
+![image](https://github.com/arbasil05/-Implementation-of-Logistic-Regression-Using-Gradient-Descent/assets/144218037/69152acc-bbef-4fdd-8bd6-bbe77f11785f)
 
-![image](https://github.com/SanjayRagavendar/-Implementation-of-Logistic-Regression-Using-Gradient-Descent/assets/91368803/3aec9c46-c885-42bb-8b45-215ac5d6274f)
-
-### data after encoding
-
-![image](https://github.com/SanjayRagavendar/-Implementation-of-Logistic-Regression-Using-Gradient-Descent/assets/91368803/b6a86619-04fe-4560-a310-194c80aa728a)
-
-
-### Array value of Y:
-
-![image](https://github.com/SanjayRagavendar/-Implementation-of-Logistic-Regression-Using-Gradient-Descent/assets/91368803/a7b6a576-f916-4792-a189-9df2e8ca530f)
-
-
-
-### Accuracy
-
-![image](https://github.com/SanjayRagavendar/-Implementation-of-Logistic-Regression-Using-Gradient-Descent/assets/91368803/12a41cc4-18b2-4375-a7eb-9d1c4a554cc5)
-
-
-  
-### New accuracy
-![image](https://github.com/SanjayRagavendar/-Implementation-of-Logistic-Regression-Using-Gradient-Descent/assets/91368803/36fd6f69-d021-4489-b46a-ab4f68f410ea)
-
-### New accuracy
-![image](https://github.com/SanjayRagavendar/-Implementation-of-Logistic-Regression-Using-Gradient-Descent/assets/91368803/36fd6f69-d021-4489-b46a-ab4f68f410ea)
 
 ## Result:
-
 Thus the program to implement the the Logistic Regression Using Gradient Descent is written and verified using python programming.
+
